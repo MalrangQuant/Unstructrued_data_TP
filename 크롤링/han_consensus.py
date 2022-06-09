@@ -11,11 +11,14 @@ import time
 
 stocks = fdr.StockListing('KRX')
 stocks['Symbol'] = stocks['Symbol'].astype(str)
+
 def remove_noise_and_split_title(title):
+
     in_code = ''
     in_name = ''
 
     for code, name in stocks[['Symbol','Name']].values:
+
         if code in title and name in title:
             in_code = code
             in_name = name
@@ -26,37 +29,48 @@ def remove_noise_and_split_title(title):
     # 기업명 코드 수정
     clean_title = clean_title.replace(in_code,' ')
     clean_title = clean_title.replace(in_name,' ')
+
     while ' ' * 2 in clean_title: 
         clean_title = clean_title.replace(' ' * 2, ' ')
     
     if in_name == '':
         return [None]
+
     else: 
         return [in_name, in_code, clean_title]
 
 def consensus_crawling_DB():
+
     last = False
     page = 1
     today = dt.datetime.today().strftime("%Y-%m-%d")
     start_date = (dt.datetime.today() - relativedelta(months=1)).strftime("%Y-%m-%d")
     data = []
+
     while last == False:
+
         base_url = 'http://hkconsensus.hankyung.com/apps.analysis/analysis.list?&sdate={}&edate={}&report_type=CO&order_type=&now_page={}'.format(start_date, today, page)
         html = requests.get(base_url, headers={'User-Agent':'Gils'}).content
         soup = BeautifulSoup(html,'lxml')
         table = soup.find("div",{'class':'table_style01'}).find('table')
+
         for tr in table.find_all("tr")[1:]:
             record = []
+
             for i , td in enumerate(tr.find_all("td")[:6]):
+
                 if i == 1:
                     record += remove_noise_and_split_title(td.text)
+
                 elif i == 3:
                     record.append(td.text.replace(" ","").replace("\r","").replace("\n",""))
+
                 else:
                     record.append(td.text)
 
             if None not in record:
                 data.append(record)
+
         print('Loading page number {}...'.format(page))
     
         page_place = soup.find("div",{"class":"paging"})
@@ -84,6 +98,7 @@ def consensus_crawling_DB():
 data = consensus_crawling_DB()
 
 print(data)
+print('\n')
 
 def consensus_report_titles(name):
     new_list = [x[3] for x in data if x[1] == name]
