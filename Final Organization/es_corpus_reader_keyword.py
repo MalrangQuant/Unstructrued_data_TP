@@ -2,11 +2,11 @@ import datetime as dt
 import pdb
 
 from dateutil.relativedelta import relativedelta
-from download_data import fetch_news_docs
+from download_data import fetch_news_docs_with_keyword
 
 class EsCorpusReader:
 
-    def __init__(self, date_from=None, date_to=None):
+    def __init__(self, date_from=None, date_to=None, keyword=None):
         if date_to:
             self.date_to = date_to
         else:
@@ -16,7 +16,10 @@ class EsCorpusReader:
             self.date_from = date_from
         else:
             self.date_from = self.date_to - relativedelta(days=1)
-    
+
+        
+        self.keyword = keyword
+
         self._buffer = []
         self._next_page = 0
 
@@ -25,13 +28,11 @@ class EsCorpusReader:
         self._buffer = []
         self._next_page = 0
 
-
     def fetch_next_page(self):
-        docs = fetch_news_docs(self.date_from, self.date_to, self._next_page)
+        docs = fetch_news_docs_with_keyword(self.date_from, self.date_to, self._next_page, self.keyword)
 
         self._buffer += docs
         self._next_page += 1
-
 
     def docs(self, n=-1):
 
@@ -58,9 +59,8 @@ class EsCorpusReader:
         for doc in self.docs(n):
             yield doc['_source']['title']
 
-
 if __name__ == '__main__':
-    reader = EsCorpusReader(date_from=dt.datetime(2022, 4, 1))
+    reader = EsCorpusReader(date_from=dt.datetime(2022, 5, 1), date_to=dt.datetime(2022, 5, 31), keyword="옴바니밧메훔")
 
     for idx, title in enumerate(reader.titles(n=10)):
         print(f'News #{idx}: ', title)

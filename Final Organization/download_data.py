@@ -74,6 +74,51 @@ def fetch_news_docs(date_from, date_to, page):
 
     return hits
 
+def fetch_news_docs_with_keyword (date_from, date_to, page, keyword):
+
+    query = {
+        "query": {
+            "bool": {
+                "must":[
+                    {
+                        "match":{
+                            "body": keyword
+                        }
+                    },
+                {
+                    "range":{
+                        "created_at": {
+                            "gte": date_from.isoformat(),
+                            "lt": date_to.isoformat()
+                            }
+                        }
+                    }
+                ]
+            },
+        },
+        "size": 10,
+        "from": page * 10
+    }
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    resp = requests.get(
+        f'{ELASTIC_SEARCH_URL}/news/_search',
+        headers = headers,
+        data = json.dumps(query),
+        auth = ELASTIC_SEARCH_AUTH
+    )
+
+    assert resp.status_code == 200
+
+    data = json.loads(resp.text)
+    hits = data['hits']['hits']
+
+    return hits
+
+
 
 def download_data (date_from, date_to):
     print("Downloading data from OpenSearch server")
