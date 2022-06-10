@@ -4,7 +4,7 @@ import pdb
 from dateutil.relativedelta import relativedelta
 from download_data import fetch_news_docs_with_keyword
 
-class EsCorpusReader:
+class EsCorpusReader_key:
 
     def __init__(self, date_from=None, date_to=None, keyword=None):
         if date_to:
@@ -60,7 +60,7 @@ class EsCorpusReader:
             yield doc['_source']['title']
 
 if __name__ == '__main__':
-    reader = EsCorpusReader(date_from=dt.datetime(2022, 5, 1), date_to=dt.datetime(2022, 5, 31), keyword="옴바니밧메훔")
+    reader = EsCorpusReader_key(date_from=dt.datetime(2022, 5, 1), date_to=dt.datetime(2022, 5, 31), keyword="옴바니밧메훔")
 
     for idx, title in enumerate(reader.titles(n=10)):
         print(f'News #{idx}: ', title)

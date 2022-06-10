@@ -73,6 +73,7 @@ def fetch_news_docs(date_from, date_to, page):
     hits = data['hits']['hits']
 
     return hits
+    
 
 def fetch_news_docs_with_keyword (date_from, date_to, page, keyword):
 
@@ -85,7 +86,7 @@ def fetch_news_docs_with_keyword (date_from, date_to, page, keyword):
                             "body": keyword
                         }
                     },
-                {
+                    {
                     "range":{
                         "created_at": {
                             "gte": date_from.isoformat(),
