@@ -96,7 +96,7 @@ def achievement_ratio(name, data):
     for i in range(len(consensus_report_price(name,data))):
         price.append(int(consensus_report_price(name,data)[i].replace(',','')))
 
-    achievement_ratio = current_price / np.mean(price)
+    achievement_ratio = current_price / np.mean(price) - 1
 
     return achievement_ratio
 
@@ -112,7 +112,7 @@ def target_change(name, data, data_ago):
     for i in range(len(price_now)):
         price_now[i] = int(price_now[i].replace(',',''))
     
-    return np.mean(price_now) / np.mean(month_ago_price)
+    return np.mean(price_now) / np.mean(month_ago_price) - 1
 
 
 # 네이버증권 종목토론방 크롤링 함수(기준일 기준)
