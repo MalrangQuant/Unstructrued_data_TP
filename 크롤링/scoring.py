@@ -1,16 +1,16 @@
+
+import numpy as np
 import pandas as pd
+import datetime as dt
+import matplotlib as plt
+
 import FinanceDataReader as fdr
 import yfinance as yf
-import datetime as dt
-from dateutil.relativedelta import relativedelta
-import matplotlib as plt
+
 import requests
 from bs4 import BeautifulSoup
-import re
-import time
-import numpy as np
 
-import crawling
+from dateutil.relativedelta import relativedelta
 from crawling import consensus_crawling_DB, consensus_crawling_DB_a_month_ago
 
 # 상장법인 코드 추출
@@ -159,11 +159,7 @@ def reply_vol(name):
     b=[i for i in b if '2022' in i]
     c = [i for i in c if '2022' in i]
 
-    # print(b) 
-    # print(c)
-
     return (len(b) - len(c)) / len(c)
-
 
 
     
