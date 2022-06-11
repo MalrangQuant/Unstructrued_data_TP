@@ -54,7 +54,11 @@ plt.rcParams['axes.unicode_minus'] = False
 # rc('font', family=font)
 # plt.rcParams['axes.unicode_minus'] = False
 
+han = Hannanum()
+classifier = pipeline('sentiment-analysis', model='snunlp/KR-FinBert-SC')
 
+kospi_all_stock_df = fdr.StockListing('KRX')
+stockcode = kospi_all_stock_df[['Symbol', 'Market', 'Name']]
 
 def df_plotting(df, title='Insert Title'):
 
