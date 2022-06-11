@@ -3,7 +3,6 @@ import pdb
 
 from dateutil.relativedelta import relativedelta
 from download_data import fetch_news_docs_with_keyword
-
 class EsCorpusReader_key:
 
     def __init__(self, date_from=None, date_to=None, keyword=None):
@@ -54,6 +53,10 @@ class EsCorpusReader_key:
             n -= 1
 
             yield doc
+
+    def urls(self, n=-1):
+        for doc in self.docs(n):
+            yield doc['_source']['naver_url']
 
     def titles(self, n=-1):
         for doc in self.docs(n):
